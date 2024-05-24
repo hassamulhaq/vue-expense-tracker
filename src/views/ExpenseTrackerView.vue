@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Header />
-    <Balance />
+    <Balance :total="total" />
     <IncomeExpenses />
     <TransactionList :transactions="transactions" />
     <<AddTransaction @transactionSubmitted="transactionSubmitted"/>
@@ -30,6 +30,13 @@ let transactions = ref([
     'amount': '-40'
   }
 ]);
+
+const total = computed(() => {
+  return transactions.value.reduce((acc, transaction) => {
+    return acc + Number(transaction.amount);
+  }, 0).toFixed(2);
+})
+
 
 
 function transactionSubmitted(data: any) {
