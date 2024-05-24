@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <Header />
-    <Balance :total="total" />
-    <IncomeExpenses />
-    <TransactionList :transactions="transactions" />
-    <<AddTransaction @transactionSubmitted="transactionSubmitted"/>
+    <Header/>
+    <Balance :total="total"/>
+    <IncomeExpenses :expense="expense" :income="income"/>
+    <TransactionList />
+    <AddTransaction @transactionSubmitted="transactionSubmitted"/>
   </div>
 </template>
 
@@ -37,7 +37,25 @@ const total = computed(() => {
   }, 0).toFixed(2);
 })
 
+const income = computed(() => {
+  return transactions.value
+      .filter((transaction) => {
+        return Number(transaction.amount) > 0
+      })
+      .reduce((acc, transaction) => {
+        return acc + Number(transaction.amount)
+      }, 0).toFixed(2);
+});
 
+const expense = computed(() => {
+  return transactions.value
+      .filter((transaction) => {
+        return Number(transaction.amount) < 0
+      })
+      .reduce((acc, transaction) => {
+        return acc + Number(transaction.amount)
+      }, 0).toFixed(2);
+});
 
 function transactionSubmitted(data: any) {
   if (data && data.hasOwnProperty('id') && data.hasOwnProperty('name') && data.hasOwnProperty('amount')) {
