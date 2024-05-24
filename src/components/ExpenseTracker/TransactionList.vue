@@ -1,35 +1,12 @@
 <script setup lang="ts">
 
-import { nanoid } from 'nanoid'
-
-const transactionData = [
-  {
-    'id': nanoid(),
-    'name': 'Pay Check',
-    'amount': '400'
-  },
-  {
-    'id': nanoid(),
-    'name': 'Lunch',
-    'amount': '-77'
-  },
-  {
-    'id': nanoid(),
-    'name': 'Fuel',
-    'amount': '-10'
-  },
-  {
-    'id': nanoid(),
-    'name': 'A4tech Mouse',
-    'amount': '-20'
-  },
-  {
-    'id': nanoid(),
-    'name': 'Bond',
-    'amount': '90'
+defineProps({
+  transactions: {
+    type: Array,
+    required: true,
+    default: () => []
   }
-]
-
+})
 </script>
 
 <template>
@@ -37,7 +14,7 @@ const transactionData = [
     <h3>History</h3>
     <ul id="list" class="list">
       <li
-        v-for="transaction in transactionData"
+        v-for="transaction in transactions"
         :key="transaction.id"
         :data-nanoid="transaction.id"
         :class="(Number(transaction.amount) < 0) ? 'minus' : 'plus'">
