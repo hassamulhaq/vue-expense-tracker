@@ -15,21 +15,18 @@ import IncomeExpenses from '@/components/ExpenseTracker/IncomeExpenses.vue'
 import TransactionList from '@/components/ExpenseTracker/TransactionList.vue'
 import AddTransaction from '@/components/ExpenseTracker/AddTransaction.vue'
 import Header from '@/components/ExpenseTracker/Header.vue'
-import {nanoid} from 'nanoid'
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 
-let transactions = ref([
-  {
-    'id': nanoid(),
-    'name': 'Pay Check',
-    'amount': '400'
-  },
-  {
-    'id': nanoid(),
-    'name': 'Hello',
-    'amount': '-40'
+const localStorageKey = "_expense_data";
+
+let transactions = ref([]);
+
+onMounted(() => {
+  const savedTransactions = JSON.parse(localStorage.getItem(localStorageKey))
+  if (savedTransactions) {
+    transactions.value = savedTransactions
   }
-]);
+});
 
 const total = computed(() => {
   return transactions.value.reduce((acc, transaction) => {
@@ -60,17 +57,24 @@ const expense = computed(() => {
 function transactionSubmitted(data: any) {
   if (data && data.hasOwnProperty('id') && data.hasOwnProperty('name') && data.hasOwnProperty('amount')) {
     transactions.value.push(data);
+    saveTransactionToLocalStorage()
     return true;
   }
-
   alert('Error: Transaction');
+
   return false;
+}
+
+const saveTransactionToLocalStorage = () => {
+  localStorage.setItem(localStorageKey, JSON.stringify(transactions.value))
 }
 
 function deleteExpenseFn(id: string) {
   transactions.value = transactions.value.filter((item) => {
     return item.id != id;
   });
+
+  saveTransactionToLocalStorage()
 }
 
 </script>
