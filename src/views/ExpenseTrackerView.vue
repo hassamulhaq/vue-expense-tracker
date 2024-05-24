@@ -3,7 +3,7 @@
     <Header/>
     <Balance :total="total"/>
     <IncomeExpenses :expense="expense" :income="income"/>
-    <TransactionList />
+    <TransactionList :transactions="transactions" @deleteExpense="deleteExpenseFn"/>
     <AddTransaction @transactionSubmitted="transactionSubmitted"/>
   </div>
 </template>
@@ -67,6 +67,10 @@ function transactionSubmitted(data: any) {
   return false;
 }
 
-
+function deleteExpenseFn(id: string) {
+  transactions.value = transactions.value.filter((item) => {
+    return item.id != id;
+  });
+}
 
 </script>
